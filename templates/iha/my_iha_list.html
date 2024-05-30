@@ -1,0 +1,294 @@
+{% extends 'layouts/adminlayout.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+
+{% block header %}
+    <head>
+        <meta charset="UTF-8">
+        <title>İHA Profilim</title>
+    </head>
+{% endblock %}
+
+
+{% block content %}
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row page-title align-items-center">
+                <div class="col-md-3 col-xl-6">
+                    <h4>Tüm İHA'larım</h4>
+                </div>
+                <div class="col-md-9 col-xl-6 text-md-right">
+                    <div>
+                        <a data-toggle="modal" data-target="#new_modal" class="btn mb-3 mb-sm-0"><i
+                                class="icon icon-airplane3 mr-1"></i> Yeni Ekle</a>
+                        <a data-toggle="modal"
+                           data-target="#filtre_modal"
+                           class="btn mb-3 mb-sm-0"><i
+                                class="icon icon-filter3 mr-1"></i> Filtrele</a>
+                    </div>
+                </div>
+            </div>
+            {% if messages %}
+                <div class="col-12 mt-2">
+                    {% for message in messages %}
+                        {% if message.tags == "error" %}
+                            <div class="alert alert-danger" role="alert">{{ message }}</div>
+                        {% else %}
+                            <div class="alert alert-success" role="alert">{{ message }}</div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="justified-top-icon-tab1">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="myIhaList" class="table table-hover table-bordered table-striped">
+                                <thead>
+                                <tr role="row" class="bg-slate-800">
+                                    <th>Başlık</th>
+                                    <th>Marka</th>
+                                    <th>Model</th>
+                                    <th>Cevaplanmamış Talep</th>
+                                    <th>Oluşturulma Zamanı</th>
+                                    <th class="text-right">Aksiyon</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for iha in all_iha.qs %}
+                                    <tr>
+                                        <td>
+                                            {{ iha.title|default_if_none:"-" }}
+                                        </td>
+                                        <td>
+                                            {{ iha.brand }}
+                                        </td>
+                                        <td>
+                                            {{ iha.model }}
+                                        </td>
+                                        <td>
+                                            {% if iha.check_unanswered_request %}
+                                                <span class="text-success">Var</span>
+                                            {% else %}
+                                                <span class="text-warning">Yok</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ iha.created_at|date:"d/m/Y" }}
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="dropdown">
+                                                <a href="#" class="list-icons-item" data-toggle="dropdown">
+                                                    <i class="icon-menu9"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a href="#" class="dropdown-item"
+                                                       onclick="getIhaDetail('{{ iha.uuid }}')"><i
+                                                            class="icon-file-eye"></i>
+                                                        İHA Detay</a>
+                                                    <a href="{% url 'iha:my-iha-rental-detail' iha.uuid %}"
+                                                       class="dropdown-item"><i
+                                                            class="icon-file-check"></i>
+                                                        Kiralama Detayları</a>
+                                                    <a href="{% url 'iha:update-iha' iha.uuid %}"
+                                                       class="dropdown-item"><i class="icon-circle"></i>
+                                                        Güncelle</a>
+                                                    <a href="#" onclick="deleteIha('{{ iha.uuid }}')"
+                                                       class="dropdown-item text-danger"><i
+                                                            class="icon-folder-remove"></i> Sil</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="filtre_modal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Filtrele</h6>
+                    <button type="button" class="close" data-dismiss="modal">&times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'iha:my-iha' %}" method="get">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ all_iha.form|crispy }}
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" name="myIhaFilterSubmit" class="btn btn-primary btn-block">Filtrele<i
+                                    class="icon-circle-right2 ml-2"></i></button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="new_modal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Yeni İHA</h6>
+                    <button type="button" class="close" data-dismiss="modal">&times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'iha:add-iha' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ new_iha_form.title|as_crispy_field }}
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    {{ new_iha_form.brand|as_crispy_field }}
+                                </div>
+                                <div class="form-group">
+                                    {{ new_iha_form.model|as_crispy_field }}
+                                </div>
+                                <div class="form-group">
+                                    {{ new_iha_form.category|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    {{ new_iha_form.communication_range|as_crispy_field }}
+                                </div>
+                                <div class="form-group">
+                                    {{ new_iha_form.weight|as_crispy_field }}
+                                </div>
+                                <div class="form-group">
+                                    {{ new_iha_form.length|as_crispy_field }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" name="newIhaSubmit" class="btn btn-primary btn-block">Ekle<i
+                                    class="icon-circle-right2 ml-2"></i></button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detail_modal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">İHA Detay</h6>
+                    <button type="button" class="close" data-dismiss="modal">&times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="summaryTable" class="table">
+                            <tr>
+                                <th>Marka:</th>
+                                <td id="brand"></td>
+                            </tr>
+                            <tr>
+                                <th>Model:</th>
+                                <td id="model"></td>
+                            </tr>
+                            <tr>
+                                <th>İletişim Mesafesi:</th>
+                                <td id="communication_range"></td>
+                            </tr>
+                            <tr>
+                                <th>Ağırlık (kg):</th>
+                                <td id="weight"></td>
+                            </tr>
+                            <tr>
+                                <th>Uzunluk (mt):</th>
+                                <td id="length"></td>
+                            </tr>
+                            <tr>
+                                <th>Kategori:</th>
+                                <td id="category"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function deleteIha(uuid) {
+            let target_url = "{% url 'api_iha:api-iha-detail' 'uuid' %}".replace('uuid', uuid)
+            $.ajax({
+                type: "DELETE",
+                url: target_url,
+                dataType: "json",
+                headers: {"X-CSRFTOKEN": "{{ csrf_token }}"},
+                success: function (data) {
+                    window.location.reload();
+                },
+                failure: function () {
+                    console.log("Something wrong.")
+                }
+            });
+        }
+
+        function getIhaDetail(uuid) {
+            let target_url = "{% url 'api_iha:api-iha-detail' 'uuid' %}".replace('uuid', uuid)
+            $.ajax({
+                type: "GET",
+                url: target_url,
+                dataType: "json",
+                success: function (data) {
+                    document.getElementById('brand').innerText = data.brand;
+                    document.getElementById('model').innerText = data.model;
+                    document.getElementById('communication_range').innerText = data.communication_range || "-";
+                    document.getElementById('weight').innerText = data.weight || "-";
+                    document.getElementById('length').innerText = data.length || "-";
+                    document.getElementById('category').innerText = data.category || "-";
+                    myModal = new bootstrap.Modal(document.getElementById('detail_modal'));
+                    myModal.show()
+                },
+                failure: function () {
+                    console.log("Something wrong.")
+                }
+            });
+        }
+    </script>
+
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.11/sorting/date-eu.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+    <script>
+
+        $(function () {
+            $('#myIhaList').DataTable({
+                columnDefs: [{"targets": 4, "type": "date-eu"}],
+                order: [],
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/tr.json',
+                },
+            });
+        });
+    </script>
+{% endblock %}

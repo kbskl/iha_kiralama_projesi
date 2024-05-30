@@ -1,0 +1,37 @@
+{% extends 'layouts/adminlayout.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+
+{% block header %}
+    <head>
+        <meta charset="UTF-8">
+        <title>İHA Güncelleme</title>
+    </head>
+{% endblock %}
+
+
+{% block content %}
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row page-title align-items-center">
+                <div class="col-md-3 col-xl-6">
+                    <h4>İHA Güncelleme</h4>
+                </div>
+            </div>
+            <div class="tab-content">
+                <form class="job-post-form" action="{% url 'iha:update-iha' iha.uuid %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ iha_form|crispy }}
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" name="ihaUpdate" class="btn btn-primary btn-block">Güncelle <i
+                                class="icon-circle-right2 ml-2"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

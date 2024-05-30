@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Global stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet"
+          type="text/css">
+    <link href="{% static 'css/icons/icomoon/styles.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'assets/css/bootstrap_limitless.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'assets/css/layout.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'assets/css/components.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'assets/css/colors.min.css' %}" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+    <!-- /global stylesheets -->
+
+    <!-- Core JS files -->
+    <script src="{% static 'js/main/jquery.min.js' %}"></script>
+    <script src="{% static 'js/main/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/plugins/loaders/blockui.min.js' %}"></script>
+    <!-- /core JS files -->
+
+    <script src="{% static 'js/plugins/notifications/jgrowl.min.js' %}"></script>
+    <script src="{% static 'js/plugins/notifications/noty.min.js' %}"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{% static 'assets/js/app.js' %}"></script>
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon8.ico' %}"/>
+
+    {% block header %}
+    {% endblock %}
+</head>
+
+<body>
+{% include 'layouts/navbar.html' %}
+<div class="page-header">
+    <div class="breadcrumb-line breadcrumb-line-light header-elements-md-inline mb-0">
+        {% block breadcrumb %}
+        {% endblock %}
+    </div>
+</div>
+{% include 'layouts/sidebar.html' %}
+{% block content %}
+{% endblock %}
+</div>
+</body>
+
+<script>
+    Noty.overrideDefaults({
+        theme: 'limitless',
+        layout: 'topRight',
+        type: 'alert',
+        timeout: 2500
+    });
+
+    if ("{{infoList.1}}" != "" && "{{infoList.0}}" != "Empty") {
+        new Noty({
+            text: '{{ infoList.1 }}',
+            type: "{{ infoList.0 }}",
+        }).show();
+    }
+
+</script>
+
+{% block scripts %}
+{% endblock %}

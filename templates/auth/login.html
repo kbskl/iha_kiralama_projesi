@@ -1,0 +1,110 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Giriş Yap</title>
+
+    <!-- Global stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet"
+          type="text/css">
+    <link href="{% static 'css/icons/icomoon/styles.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'assets/css/bootstrap_limitless.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'assets/css/layout.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'assets/css/components.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'assets/css/colors.min.css' %}" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+
+    <!-- Core JS files -->
+    <script src="{% static 'js/main/jquery.min.js' %}"></script>
+    <script src="{% static 'js/main/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/plugins/loaders/blockui.min.js' %}"></script>
+    <!-- /core JS files -->
+
+    <script src="{% static 'js/plugins/notifications/jgrowl.min.js' %}"></script>
+    <script src="{% static 'js/plugins/notifications/noty.min.js' %}"></script>
+
+    <script src="{% static 'assets/js/app.js' %}"></script>
+
+</head>
+<body>
+
+<!-- Main navbar -->
+<div class="navbar navbar-expand-md navbar-dark">
+    <div class="navbar-brand wmin-200">
+        <a href="{% url 'authentication:register' %}" class="d-inline-block btn btn-primary btn-block">
+            Kayıt Ol
+        </a>
+    </div>
+</div>
+
+
+<div class="page-content">
+
+    <!-- Main content -->
+    <div class="content-wrapper">
+
+        <!-- Content area -->
+        <div class="content d-flex justify-content-center align-items-center">
+            <!-- Login form -->
+            <form class="login-form" action="{% url 'authentication:login' %}" method="post">
+                {% csrf_token %}
+                <div class="card mb-0">
+                    <div class="card-body">
+                        {% if messages %}
+                            <div class="col-12 mt-2">
+                                {% for message in messages %}
+                                    {% if message.tags == "error" %}
+                                        <div class="alert alert-danger" role="alert">{{ message }}</div>
+                                    {% else %}
+                                        <div class="alert alert-success" role="alert">{{ message }}</div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="text-center mb-3">
+                            <i class="icon-reading icon-2x text-slate-300 border-slate-300 border-3 rounded-round p-3 mb-3 mt-1"></i>
+                            <h5 class="mb-0">Giriş</h5>
+                            <span class="d-block text-muted">Giriş Bilgilerinizi Girin</span>
+                            {% if login_form.errors %}
+                                {% for field in login_form %}
+                                    {% for error in field.errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in login_form.non_field_errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="form-group form-group-feedback form-group-feedback-left">
+                            {{ login_form.username }}
+                        </div>
+                        <div class="form-group form-group-feedback form-group-feedback-left">
+                            {{ login_form.password }}
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" name="" class="btn btn-primary btn-block">Giriş Yap <i
+                                    class="icon-circle-right2 ml-2"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- /login form -->
+        </div>
+        <!-- /content area -->
+    </div>
+    <!-- /main content -->
+</div>
+
+</body>
+
+</html>

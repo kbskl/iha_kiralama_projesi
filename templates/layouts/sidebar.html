@@ -1,0 +1,101 @@
+{% load static %}
+<div class="page-content pt-0">
+    <div class="sidebar sidebar-light sidebar-main sidebar-expand-md align-self-start m-3">
+        <div class="sidebar-mobile-toggler text-center">
+            <a href="#" class="sidebar-mobile-main-toggle">
+                <i class="icon-arrow-left8"></i>
+            </a>
+            <span class="font-weight-semibold">Main sidebar</span>
+            <a href="#" class="sidebar-mobile-expand">
+                <i class="icon-screen-full"></i>
+                <i class="icon-screen-normal"></i>
+            </a>
+        </div>
+
+
+        <!-- Sidebar content -->
+        <div class="sidebar-content">
+            <div class="card card-sidebar-mobile">
+
+                <!-- Header -->
+                <div class="card-header header-elements-inline">
+                    <h6 class="card-title">Navigasyon</h6>
+                    <div class="header-elements">
+                        <div class="list-icons">
+                            <a class="list-icons-item" data-action="collapse"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User menu -->
+                <div class="sidebar-user">
+                    <div class="card-body">
+                        <div class="media">
+                            <div class="mr-3">
+                            </div>
+
+                            <div class="media-body">
+                                <div class="media-title font-weight-semibold">{{ request.user.first_name }} {{ request.user.last_name }}</div>
+                                <div class="font-size-xs opacity-50">
+                                    <i class="icon-pin font-size-sm"></i>
+                                    &nbsp;Türkiye, {{ request.user.careerprofile.location|default_if_none:'' }}
+                                </div>
+                            </div>
+
+                            <div class="ml-3 align-self-center">
+                                <a href="#" class="text-white"><i class="icon-cog3"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /user menu -->
+
+
+                <!-- Main navigation -->
+                <div class="card-body p-0">
+                    <ul class="nav nav-sidebar" data-nav-type="accordion">
+
+                        <!-- Main -->
+                        <li class="nav-item-header mt-0">
+                            <div class="text-uppercase font-size-xs line-height-xs"></div>
+                            <i class="icon-menu" title="Main"></i></li>
+                        <li class="nav-item">
+                            <a href="{% url 'core:dashboard' %}" class="nav-link">
+                                <i class="icon-home"></i>
+                                <span>
+                                    Ana Sayfa
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'iha:all-iha' %}" class="nav-link">
+                                <i class="icon-list"></i>
+                                <span>
+                                    Tüm İlanlar
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'iha:my-rented' %}" class="nav-link">
+                                <i class="icon-history"></i>
+                                <span>
+                                    Kiralamalarım
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'iha:my-iha' %}" class="nav-link">
+                                <i class="icon-airplane2"></i>
+                                <span>
+                                    İHA'larım
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /main navigation -->
+
+            </div>
+        </div>
+        <!-- /sidebar content -->
+    </div>
